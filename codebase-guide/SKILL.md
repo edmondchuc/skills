@@ -201,6 +201,10 @@ Locate the task architecturally before expanding outward. Teach the smallest arc
 
 Use diagrams only when they clarify relationships or sequences that are harder to express in prose.
 
+When a diagram is useful and the environment supports Mermaid, prefer a small Mermaid diagram for relationships or execution flows. Keep it simple enough that the accompanying prose still carries the explanation.
+
+Use ASCII diagrams when Mermaid is unavailable or when a very small inline sketch is clearer.
+
 Do not collapse substantial module-owned behaviour into arrows between external dependencies. If a third-party library performs the low-level operation but the current subsystem owns policy, normalisation, caching, dispatch, or semantic interpretation, represent that responsibility or explain it immediately below the diagram.
 
 ## Maintain the working model
