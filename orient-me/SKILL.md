@@ -2,7 +2,7 @@
 name: orient-me
 description: Build a conversational mental model of an unfamiliar codebase.
 disable-model-invocation: true
-argument-hint: "What do you want to be oriented in?"
+argument-hint: "What codebase area or task?"
 ---
 
 # Orient Me
@@ -98,7 +98,7 @@ When useful, name a small number of anchor files or abstractions that help the u
 
 ## The spine
 
-The spine is one representative execution path through the part of the system in question. Explain through the spine rather than through a static inventory.
+The spine is one representative path through the part of the system in question, such as an execution path, a data flow, or a configuration or wiring path. Explain through the spine rather than through a static inventory.
 
 For each important stage, explain:
 
