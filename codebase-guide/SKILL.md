@@ -203,6 +203,10 @@ Use diagrams only when they clarify relationships or sequences that are harder t
 
 When a diagram is useful and the environment supports Mermaid, prefer a small Mermaid diagram for relationships or execution flows. Keep it simple enough that the accompanying prose still carries the explanation.
 
+When styling Mermaid diagrams, prefer theme-neutral colours with sufficient contrast in both light and dark modes. Avoid hard-coded light backgrounds, pale fills, or low-contrast text unless the environment's theme is known.
+
+Prefer Mermaid defaults or minimal styling over custom colours when possible.
+
 Use ASCII diagrams when Mermaid is unavailable or when a very small inline sketch is clearer.
 
 Do not collapse substantial module-owned behaviour into arrows between external dependencies. If a third-party library performs the low-level operation but the current subsystem owns policy, normalisation, caching, dispatch, or semantic interpretation, represent that responsibility or explain it immediately below the diagram.
