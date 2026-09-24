@@ -92,6 +92,12 @@ Move from coarse to fine:
 
 Stay at the current level until finer detail helps. Keep the active concept set small, usually three to five unfamiliar concepts, and make clear what is worth remembering.
 
+For broad onboarding, begin with one or two plain-language sentences explaining what the project does and the problem it solves before introducing internal terminology.
+
+Introduce repository-specific names only after establishing the concept they represent; do not assume internal naming conventions are already meaningful to the user.
+
+Prefer a concrete end-to-end example through the spine when an abstraction is difficult to understand. Use a simple analogy when it genuinely clarifies the concept, without letting the analogy replace the actual architecture.
+
 For broad onboarding, start with no more than three core concepts and one spine. Explicitly defer secondary subsystems such as caching, indexing, compatibility paths, configuration, or lifecycle wiring until they matter.
 
 When useful, name a small number of anchor files or abstractions that help the user relocate themselves later, such as a registration entry point, central abstraction, representative implementation, integration point, or representative test.
