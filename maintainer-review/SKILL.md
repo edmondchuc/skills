@@ -3,16 +3,19 @@ name: maintainer-review
 description: Senior-maintainer review of a pull request, remote branch, or local changes, with severity-rated findings and a merge recommendation.
 argument-hint: "[pr-number | branch]"
 disable-model-invocation: true
+context: fork
 allowed-tools: Bash(gh pr view *) Bash(gh pr diff *) Bash(gh pr checks *) Bash(git diff *) Bash(git log *) Bash(git status *)
 ---
 
-Review this pull request as a senior maintainer.
+Review the pull request or branch named in the arguments as a senior maintainer. With no arguments, review the current branch: its open pull request if it has one, otherwise its local changes.
+
+The review is read-only: leave the working tree, the checked-out branch, and the pull request as you found them, and put everything you would change into the findings.
 
 ## Inputs
 
 Gather the PR title and description, linked issues, prior review comments and discussion, the full diff against the base branch, the CI status of the exact head commit, and relevant repository conventions (CONTRIBUTING, lint and type-check configuration, changelog or release-note requirements). Use the available tooling, for example `gh pr view`, `gh pr diff`, `gh pr checks`, or `git diff <base>...<head>`.
 
-If a remote branch is provided instead of an open pull request, review the branch diff against its intended base branch and treat references to "the PR" as referring to that branch. If you are working in a local repository with no pull request or remote branch yet, review the local changes instead: the commits on the current branch against its intended base, plus any staged and unstaged changes (for example git diff <base>...HEAD and git diff HEAD), and treat "the PR" as referring to those changes. There may be no description, review discussion, or CI in that case: take the stated claims from the commit messages or from what you were told, run the project's tests, linters, and type checks locally where you can, and note what was unavailable. If the intended base is not stated, use the repository's default branch via the merge-base, and state which base you used.
+If a remote branch is provided instead of an open pull request, review the branch diff against its intended base branch and treat references to "the PR" as referring to that branch. If you are working in a local repository with no pull request or remote branch yet, review the local changes instead: the commits on the current branch against its intended base, plus any staged and unstaged changes (for example git diff <base>...HEAD and git diff HEAD), and treat "the PR" as referring to those changes. There may be no description, review discussion, or CI in that case: take the stated claims from the commit messages or from any context given in the arguments, run the project's tests, linters, and type checks locally where you can, and note what was unavailable. If the intended base is not stated, use the repository's default branch via the merge-base, and state which base you used.
 
 Flag earlier review feedback that appears unaddressed, and do not re-raise points that were already discussed and resolved unless the new changes reopen them.
 
@@ -114,6 +117,8 @@ Observations that are worth raising but are not concrete defects (unaddressed ea
 - Failing CI on the head commit blocks approval unless the failures are clearly unrelated to the PR and you say why. Missing or inaccessible CI should be noted but is not itself a finding.
 
 ## Output format
+
+Your final message is the complete review, in this structure:
 
 1. **Summary**: what the PR claims to do, the base you reviewed against, and a short overall assessment.
 2. **Claims**: each stated claim marked as satisfied, not satisfied, or unverifiable, with a brief reason.
