@@ -58,7 +58,7 @@ Where relevant, check for performance and resource regressions: unbounded work, 
 
 ### Failure handling and operability
 
-Check that failures are surfaced appropriately rather than silently swallowed or turned into misleading success states. New failure modes should be logged with enough context to diagnose and be visible to existing monitoring. Logs must not expose secrets or personal data, and user-facing errors should be actionable. Also check for stale documentation and unnecessary dependency changes.
+Check that failures are surfaced appropriately rather than silently swallowed or turned into misleading success states. New failure modes should be logged with enough context to diagnose and be visible to existing monitoring. Logs, warnings, and exception messages must not expose personal data or secrets, such as credentials or tokens in URLs and headers. User-facing errors should be actionable. Also check for stale documentation and unnecessary dependency changes.
 
 ## Tests
 
