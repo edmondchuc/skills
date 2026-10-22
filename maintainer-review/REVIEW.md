@@ -10,7 +10,7 @@ Gather the context in your brief, the PR title and description, linked issues, p
 
 If a remote branch is provided instead of an open pull request, review the branch diff against its intended base branch and treat references to "the PR" as referring to that branch. If you are working in a local repository with no pull request or remote branch yet, review the local changes instead: the commits on the current branch against its intended base, plus any staged and unstaged changes (for example git diff <base>...HEAD and git diff HEAD), and treat "the PR" as referring to those changes. There may be no description, review discussion, or CI in that case: take the stated claims from the commit messages or from the context in your brief, and note what was unavailable. If the intended base is not stated, use the repository's default branch via the merge-base, and state which base you used.
 
-Take test, lint, and type-check results from CI, or from the brief for a local branch; if neither has them, run each check once. Beyond that, run tests only to confirm or rule out a specific finding, and only the tests involved.
+Take test, lint, and type-check results from CI, or from the brief for a local branch; if neither has them, run each check once. Beyond that, run tests only to confirm or rule out a specific finding, and only the tests involved. Run commands in the foreground, one test run at a time: concurrent runs slow each other down.
 
 Flag earlier review feedback that appears unaddressed, and do not re-raise points that were already discussed and resolved unless the new changes reopen them.
 
@@ -20,17 +20,13 @@ If you lack visibility into a referenced file, helper, generated artifact, exter
 
 First, identify what the PR claims to add, fix, or preserve, including any stated invariants. Verify that the implementation and tests actually satisfy each claim, and note anything the PR changes beyond what it claims.
 
-Focus on:
+Alongside the sections below, focus on:
 
 - correctness and regression risk;
 - edge cases and indirectly affected behaviour;
-- API and behavioural compatibility;
 - security-sensitive changes (authentication, authorisation, input validation, secrets handling, deserialisation, injection surfaces) where relevant;
-- implementation simplicity and scope;
-- idiomatic use of the language, framework, libraries, and problem domain;
-- adherence to repository conventions;
-- test quality and structure;
-- error handling, concurrency, performance, resource usage, operability, documentation, and dependency changes where relevant.
+- idiomatic use of the language, framework, libraries, and problem domain; and
+- adherence to repository conventions.
 
 Do not review only the modified lines. Inspect callers, shared helpers, defaults, dispatch or registration paths, state transitions, serialisation, caches, and analogous code where they could be affected. Trace one or two levels out from the changed code, going deeper only where a concrete risk appears.
 
@@ -77,11 +73,7 @@ For added or modified tests, verify that they:
 - are deterministic and independent of execution order, shared state, timing, locale, timezone, external services, and unspecified ordering; and
 - are not unnecessarily coupled to implementation details or propped up by needless new abstractions, fixtures, helpers, or duplicated setup.
 
-Run commands in the foreground, one test run at a time: concurrent runs slow each other down.
-
 Concurrency tests should force the problematic interleaving deterministically (synchronisation points, controllable schedulers or clocks) rather than relying on sleeps or repeated runs.
-
-For each problem, explain the concrete issue and suggest the smallest improvement, relocation, consolidation, or removal.
 
 ## Findings
 
@@ -100,7 +92,7 @@ For each finding:
 - give the smallest reasonable fix; and
 - suggest a regression test where applicable.
 
-Report only on areas where you have findings; do not narrate the checklist or list categories with nothing to say. Do not raise findings for subjective style preferences, trivial formatting, harmless naming alternatives, or equally valid implementation choices. Do not invent findings to fill out the review. If the implementation is sound, say so.
+Raise a finding only for a concrete failure mode or cost, and report only on areas where you have one. If the implementation is sound, say so.
 
 Observations that are worth raising but are not concrete defects (unaddressed earlier feedback, suggestions to split the PR, a risk worth a feature flag, surface area that may not be needed) belong in the "For the author's attention" section, not in Findings.
 
@@ -108,6 +100,7 @@ Observations that are worth raising but are not concrete defects (unaddressed ea
 
 - Any High introduced by the PR → **Request changes**.
 - A Suspected High blocks until the author confirms or refutes it; phrase it as a question that must be answered before merge.
+- Treat a gap under Not verified that could hide a High as a Suspected High.
 - A Medium introduced by the PR blocks by default. It may be non-blocking only if you explicitly justify why.
 - Low findings and items for the author's attention never block on their own.
 - Pre-existing issues do not block unless the PR worsens them or newly exposes them.
@@ -124,4 +117,5 @@ Your final message is the complete review, in this structure:
 5. **For the author's attention**: non-blocking observations that don't fit the severity rubric. Omit this section if there is nothing to raise.
 6. **Not verified**: anything you could not inspect that affects confidence in the review.
 7. **CI status**: the check results for the exact head commit and where they came from (CI, the brief, or your own run), or a note that none were available.
-8. **Recommendation**: one of **Approve**, **Approve with non-blocking comments**, or **Request changes**, with a one-sentence rationale grounded in the rules above.
+8. **Merge risk**: start with the overall risk of merging today as it stands (low, moderate, or high, with a one-line reason) and the worst realistic outcome of merging now. Then, for each risk, give the concrete consequence, what it affects, how likely it is, and how it would be noticed and undone. Draw together the findings, the gaps under Not verified, the CI status, and any rollout or rollback concerns, pointing to findings by anchor instead of restating them.
+9. **Recommendation**: one of **Approve**, **Approve with non-blocking comments**, or **Request changes**, with a one-sentence rationale grounded in the rules above.

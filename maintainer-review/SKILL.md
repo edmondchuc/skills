@@ -3,7 +3,7 @@ name: maintainer-review
 description: Senior-maintainer review of a pull request, remote branch, or local changes, with severity-rated findings and a merge recommendation.
 argument-hint: "[pr-number | branch]"
 disable-model-invocation: true
-allowed-tools: Bash(gh pr view *) Bash(gh pr diff *) Bash(gh pr checks *) Bash(git diff *) Bash(git log *) Bash(git status *)
+allowed-tools: Bash(gh pr view *) Bash(gh pr diff *) Bash(gh pr checks *) Bash(git diff *) Bash(git log *) Bash(git status *) Bash(git merge-base *) Bash(git show *) Bash(git rev-parse *)
 ---
 
 Run a senior-maintainer review in one fresh subagent in the background, so the review's legwork stays out of this conversation and you stay free while it runs. The target is the pull request or branch named in the arguments; with no arguments, it is the current branch.
