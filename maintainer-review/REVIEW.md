@@ -88,7 +88,7 @@ For each finding:
 - cite a concrete anchor: the file path plus a line number in the file at the PR head commit, or a function name;
 - explain the concrete failure mode;
 - state whether it is introduced by this PR or pre-existing;
-- mark it **Verified** (traced through the code) or **Suspected** (plausible but dependent on something you could not inspect; say what would confirm it);
+- mark it **Verified** (traced through the code) or **Suspected** (plausible but dependent on something you could not inspect; say where you looked and what would confirm it);
 - give the smallest reasonable fix; and
 - suggest a regression test where applicable.
 
@@ -115,7 +115,7 @@ Your final message is the complete review, in this structure:
 3. **Findings**: grouped by severity (High, Medium, Low), each marked Blocking or Non-blocking.
 4. **Test coverage**: a brief per-component assessment of the changed behaviour.
 5. **For the author's attention**: non-blocking observations that don't fit the severity rubric. Omit this section if there is nothing to raise.
-6. **Not verified**: anything you could not inspect that affects confidence in the review.
+6. **Not verified**: anything you could not inspect that affects confidence in the review, and for each, where you looked and what would settle it.
 7. **CI status**: the check results for the exact head commit and where they came from (CI, the brief, or your own run), or a note that none were available.
 8. **Merge risk**: start with the overall risk of merging today as it stands (low, moderate, or high, with a one-line reason) and the worst realistic outcome of merging now. Then, for each risk, give the concrete consequence, what it affects, how likely it is, and how it would be noticed and undone. Draw together the findings, the gaps under Not verified, the CI status, and any rollout or rollback concerns, pointing to findings by anchor instead of restating them.
 9. **Recommendation**: one of **Approve**, **Approve with non-blocking comments**, or **Request changes**, with a one-sentence rationale grounded in the rules above.
