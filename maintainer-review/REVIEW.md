@@ -124,4 +124,5 @@ Your final message is the complete review, in this structure:
 5. **For the author's attention**: non-blocking observations that don't fit the severity rubric. Omit this section if there is nothing to raise.
 6. **Not verified**: anything you could not inspect that affects confidence in the review.
 7. **CI status**: the check results for the exact head commit and where they came from (CI, the brief, or your own run), or a note that none were available.
-8. **Recommendation**: one of **Approve**, **Approve with non-blocking comments**, or **Request changes**, with a one-sentence rationale grounded in the rules above.
+8. **Merge risk**: what could go wrong if the PR were merged today as it stands. For each risk, give the concrete consequence, what it affects, how likely it is, and how it would be noticed and undone. Draw together the findings, the gaps under Not verified, the CI status, and any rollout or rollback concerns, pointing to findings by anchor instead of restating them. If merging today carries little risk, say so and why.
+9. **Recommendation**: one of **Approve**, **Approve with non-blocking comments**, or **Request changes**, with a one-sentence rationale grounded in the rules above.
