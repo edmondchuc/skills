@@ -14,6 +14,7 @@ The reviewer starts with none of this conversation, so the brief carries everyth
 
 - the repository path and the target as given: a PR number or URL, a branch name, or "the current branch";
 - what this conversation knows that the repository does not: what the change is meant to do, invariants or constraints the user stated, areas they're worried about, and the base branch if one was named;
+- the results of any tests, lint, or type checks already run on the target in this conversation, and the commit they ran on, so the reviewer uses them in place of its own runs;
 - the instruction to read `${CLAUDE_SKILL_DIR}/REVIEW.md` and follow it, with its final message being the complete review.
 
 The brief is done when a reviewer holding only the brief and the repository could start without asking anything.

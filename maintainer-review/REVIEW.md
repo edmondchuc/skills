@@ -8,7 +8,9 @@ The review is read-only: leave the working tree, the checked-out branch, and the
 
 Gather the context in your brief, the PR title and description, linked issues, prior review comments and discussion, the full diff against the base branch, the CI status of the exact head commit, and relevant repository conventions (CONTRIBUTING, lint and type-check configuration, changelog or release-note requirements). Use the available tooling, for example `gh pr view`, `gh pr diff`, `gh pr checks`, or `git diff <base>...<head>`.
 
-If a remote branch is provided instead of an open pull request, review the branch diff against its intended base branch and treat references to "the PR" as referring to that branch. If you are working in a local repository with no pull request or remote branch yet, review the local changes instead: the commits on the current branch against its intended base, plus any staged and unstaged changes (for example git diff <base>...HEAD and git diff HEAD), and treat "the PR" as referring to those changes. There may be no description, review discussion, or CI in that case: take the stated claims from the commit messages or from the context in your brief, run the project's tests, linters, and type checks locally where you can, and note what was unavailable. If the intended base is not stated, use the repository's default branch via the merge-base, and state which base you used.
+If a remote branch is provided instead of an open pull request, review the branch diff against its intended base branch and treat references to "the PR" as referring to that branch. If you are working in a local repository with no pull request or remote branch yet, review the local changes instead: the commits on the current branch against its intended base, plus any staged and unstaged changes (for example git diff <base>...HEAD and git diff HEAD), and treat "the PR" as referring to those changes. There may be no description, review discussion, or CI in that case: take the stated claims from the commit messages or from the context in your brief, and note what was unavailable. If the intended base is not stated, use the repository's default branch via the merge-base, and state which base you used.
+
+Take test, lint, and type-check results from CI, or from the brief for a local branch; if neither has them, run each check once. Beyond that, run tests only to confirm or rule out a specific finding, and only the tests involved.
 
 Flag earlier review feedback that appears unaddressed, and do not re-raise points that were already discussed and resolved unless the new changes reopen them.
 
@@ -46,11 +48,11 @@ Treat new public APIs, configuration options, CLI flags, extension points, and p
 
 Review backward compatibility where applicable: public APIs, configuration, persisted data, serialisation or wire formats, CLI behaviour, defaults, and migrations.
 
-Consider how the change behaves in production, not just in isolation. During a rolling deploy, old and new versions may run simultaneously against the same data, queues, and caches; check that each version tolerates data and messages produced by the other, that migrations are safe to run before or alongside the code that depends on them, and that the change can be rolled back after new data has been written. Note where a feature flag or staged rollout would materially reduce risk.
+For a deployed service, consider how the change behaves in production, not just in isolation. During a rolling deploy, old and new versions may run simultaneously against the same data, queues, and caches; check that each version tolerates data and messages produced by the other, that migrations are safe to run before or alongside the code that depends on them, and that the change can be rolled back after new data has been written. Note where a feature flag or staged rollout would materially reduce risk.
 
 ### Concurrency
 
-Where the changed code can run concurrently (threads, async tasks, parallel requests, multiple processes or service instances, background workers, retried or redelivered messages), check for race conditions: check-then-act sequences, unsynchronised shared mutable state, inconsistent lock ordering or locks held across I/O or `await`, cancellation leaving state partially updated, non-idempotent operations under retries, and database read-modify-write without an appropriate transaction, lock, or conditional update. For each suspected race, describe the specific interleaving that produces the failure.
+Where the changed code can run concurrently, for example from several threads or async tasks, check for race conditions: check-then-act sequences, unsynchronised shared mutable state, inconsistent lock ordering or locks held across I/O or `await`, and cancellation leaving state partially updated. For a deployed service, also consider parallel requests, multiple instances, background workers, and retried or redelivered messages: check for non-idempotent operations under retries and database read-modify-write without an appropriate transaction, lock, or conditional update. For each suspected race, describe the specific interleaving that produces the failure.
 
 ### Performance and resources
 
@@ -70,10 +72,12 @@ For added or modified tests, verify that they:
 
 - exercise the behaviour or failure mode they claim to cover, including meaningful positive and negative cases and important boundaries;
 - assert the specific expected error behaviour in failure tests, not merely that something failed;
-- would fail without the corresponding fix, when intended as regression tests;
+- would fail without the corresponding fix, when intended as regression tests: read the test against the fix, and run it against the base branch only when reading leaves you unsure;
 - add meaningful rather than duplicate coverage and follow established patterns unless a departure is justified;
 - are deterministic and independent of execution order, shared state, timing, locale, timezone, external services, and unspecified ordering; and
 - are not unnecessarily coupled to implementation details or propped up by needless new abstractions, fixtures, helpers, or duplicated setup.
+
+Run commands in the foreground, one test run at a time: concurrent runs slow each other down.
 
 Concurrency tests should force the problematic interleaving deterministically (synchronisation points, controllable schedulers or clocks) rather than relying on sleeps or repeated runs.
 
@@ -119,5 +123,5 @@ Your final message is the complete review, in this structure:
 4. **Test coverage**: a brief per-component assessment of the changed behaviour.
 5. **For the author's attention**: non-blocking observations that don't fit the severity rubric. Omit this section if there is nothing to raise.
 6. **Not verified**: anything you could not inspect that affects confidence in the review.
-7. **CI status**: the status of the exact head commit, or a note that it was inaccessible.
+7. **CI status**: the check results for the exact head commit and where they came from (CI, the brief, or your own run), or a note that none were available.
 8. **Recommendation**: one of **Approve**, **Approve with non-blocking comments**, or **Request changes**, with a one-sentence rationale grounded in the rules above.
