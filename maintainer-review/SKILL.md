@@ -21,7 +21,7 @@ The brief is done when a reviewer holding only the brief and the repository coul
 
 ## 2. Launch the reviewer
 
-Launch the reviewer as a fresh general-purpose subagent in the background with the brief, then tell the user the review is running.
+Launch the reviewer as a fresh general-purpose subagent in the background with the brief, then tell the user the review is running. While it runs, relay any progress update it sends, and message it only to pass on new information from the user or to check on it after 15 minutes without an update.
 
 ## 3. Relay the review
 

@@ -4,13 +4,17 @@ Review the pull request or branch named in your brief as a senior maintainer. Wh
 
 The review is read-only: leave the working tree, the checked-out branch, and the pull request as you found them, and put everything you would change into the findings.
 
+If you can message the agent that launched you, send it a one-line update at each milestone: inputs gathered, each potential blocking finding confirmed or ruled out, and the review drafted.
+
 ## Inputs
 
 Gather the context in your brief, the PR title and description, linked issues, prior review comments and discussion, the full diff against the base branch, the CI status of the exact head commit, and relevant repository conventions (CONTRIBUTING, lint and type-check configuration, changelog or release-note requirements). Use the available tooling, for example `gh pr view`, `gh pr diff`, `gh pr checks`, or `git diff <base>...<head>`.
 
 If a remote branch is provided instead of an open pull request, review the branch diff against its intended base branch and treat references to "the PR" as referring to that branch. If you are working in a local repository with no pull request or remote branch yet, review the local changes instead: the commits on the current branch against its intended base, plus any staged and unstaged changes (for example git diff <base>...HEAD and git diff HEAD), and treat "the PR" as referring to those changes. There may be no description, review discussion, or CI in that case: take the stated claims from the commit messages or from the context in your brief, and note what was unavailable. If the intended base is not stated, use the repository's default branch via the merge-base, and state which base you used.
 
-Take test, lint, and type-check results from CI, or from the brief for a local branch; if neither has them, run each check once. Beyond that, run tests only to confirm or rule out a specific finding, and only the tests involved. Run commands in the foreground, one test run at a time: concurrent runs slow each other down.
+Take test, lint, and type-check results from CI, or from the brief for a local branch. Where neither has them, run only the checks applicable to the change: those the reviewed revision defines, in its CI workflows, task runner, or contributing guide, for the kinds of files the change touches. Read them at that revision, since they may differ from the checkout you are in. A documentation-only change needs only the documentation checks, and a lockfile check applies only where the revision has that lockfile. Beyond that, run tests only to confirm or rule out a specific finding, and only the tests involved. Run commands in the foreground, one test run at a time: concurrent runs slow each other down.
+
+Read code at any revision with git, for example `git show <rev>:<path>` and `git grep <pattern> <rev>`. To run something against a revision that is not checked out, make one temporary copy of it outside the repository, and keep everything the review writes inside that copy, including environments and any tool caches you redirect. Install the dependencies the revision pins, with its own package manager, lockfile, and language version, and use only environments you create there or the checkout's own. If setup fails, for example for lack of disk space, review by reading and list the checks you could not run under Not verified. Delete the copy before your final message.
 
 Flag earlier review feedback that appears unaddressed, and do not re-raise points that were already discussed and resolved unless the new changes reopen them.
 
@@ -92,6 +96,8 @@ For each finding:
 - give the smallest reasonable fix; and
 - suggest a regression test where applicable.
 
+Hold each proposed fix to the same standard as the defect: it is ready when it accounts for every contract and caller it touches, including shared types, specifications, and performance paths, and keeps what the PR set out to achieve. Where the right fix depends on something you could not settle, such as which contract a type describes, give each option with the assumption it rests on.
+
 Raise a finding only for a concrete failure mode or cost, and report only on areas where you have one. If the implementation is sound, say so.
 
 Observations that are worth raising but are not concrete defects (unaddressed earlier feedback, suggestions to split the PR, a risk worth a feature flag, surface area that may not be needed) belong in the "For the author's attention" section, not in Findings.
@@ -116,6 +122,6 @@ Your final message is the complete review, in this structure:
 4. **Test coverage**: a brief per-component assessment of the changed behaviour.
 5. **For the author's attention**: non-blocking observations that don't fit the severity rubric. Omit this section if there is nothing to raise.
 6. **Not verified**: anything you could not inspect that affects confidence in the review, and for each, where you looked and what would settle it.
-7. **CI status**: the check results for the exact head commit and where they came from (CI, the brief, or your own run), or a note that none were available.
+7. **CI status**: the check results for the exact head commit and where they came from (CI, the brief, or your own run, naming any tool versions that differ from the revision's pins), or a note that none were available.
 8. **Merge risk**: start with the overall risk of merging today as it stands (low, moderate, or high, with a one-line reason) and the worst realistic outcome of merging now. Then, for each risk, give the concrete consequence, what it affects, how likely it is, and how it would be noticed and undone. Draw together the findings, the gaps under Not verified, the CI status, and any rollout or rollback concerns, pointing to findings by anchor instead of restating them.
 9. **Recommendation**: one of **Approve**, **Approve with non-blocking comments**, or **Request changes**, with a one-sentence rationale grounded in the rules above.
