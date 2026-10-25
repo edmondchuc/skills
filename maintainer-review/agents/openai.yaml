@@ -1,0 +1,5 @@
+interface:
+  display_name: "Maintainer Review"
+  short_description: "Severity-rated review with a merge recommendation"
+policy:
+  allow_implicit_invocation: false
